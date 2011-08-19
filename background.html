@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<script src="parseuri.min.js"></script>
+<script src="get.js"></script>
+<script src="md5-min.js"></script>
+<script>
+/*if(GET["#"] != ""){
+chrome.windows.onRemoved.addListener(function(windowId) {
+//      var w = chrome.windows.get(windowId, function(){});
+//      var urls = turl(w.tabs);
+        chrome.windows.create({url: getHomePage()});
+});
+chrome.tabs.onRemoved.addListener(function(tabId,removeInfo) {
+//      var t = chrome.tabs.get(tabId, function(){});
+        if(removeInfo.isWindowClosing){return}
+        chrome.tabs.create({url: getHomePage()});
+});
+chrome.tabs.onUpdated.addListener(function(a, b, c){tabAllowed(a, b, c)});
+chrome.tabs.onCreated.addListener(function(a){tabAllowed(undefined, undefined, a)});
+chrome.extension.onRequest.addListener(
+  function(request, sender, sendResponse) {
+//    console.log(sender.tab ?
+//                "from a content script:" + sender.tab.url :
+//                "from the extension");
+        console.log(request);
+    if(request.domain){
+    if (request.set){
+      setDomain(request.domain);
+      sendResponse({});
+    }else{
+      sendResponse({domain: getDomain(request.domain)});
+    }
+    }else if(request.homepage){
+    if (request.set){
+      setHomePage(request.homepage);
+      sendResponse({});
+    }else{
+      sendResponse({homepage: getHomePage()});
+    }
+  }
+  });
+}*/
+function getDomain(d){
+        return JSON.parse(localStorage["domain"]);
+}
+function setDomain(d){
+	return localStorage["domain"] = JSON.stringify(d);
+}
+function setHomePage(h){
+	return localStorage["home"] = h;
+}
+function getHomePage(){
+	return localStorage["home"];
+}
+function setPassword(p){
+	return localStorage["password"] = p;
+}
+function getPassword(){
+	return localStorage["password"];
+}
+chrome.extension.onRequest.addListener(
+  function(request, sender, sendResponse) {
+//    console.log(sender.tab ?
+//                "from a content script:" + sender.tab.url :
+//                "from the extension");
+	console.log(request);
+    if(request.domain){
+    if (request.set){
+      setDomain(request.domain);
+      sendResponse({});
+    }else{
+      sendResponse({domain: getDomain(request.domain)});
+    }
+    }else if(request.homepage){
+    if (request.set){
+      setHomePage(request.homepage);
+      sendResponse({});
+    }else{
+      sendResponse({homepage: getHomePage()});
+    }
+  }else if(request.password){
+//    console.log("password");
+    if (request.set){
+      setPassword(request.password);
+      sendResponse({});
+    }else{
+      sendResponse({password: getPassword()});
+    }
+  }});
+function turl(ta){
+	var o = [];
+	var i;
+	for(i in ta){
+		o.push(ta[i].url);
+	}
+	return o;
+}
+
+chrome.windows.onRemoved.addListener(function(windowId) {
+//	var w = chrome.windows.get(windowId, function(){});
+//	var urls = turl(w.tabs);
+	chrome.windows.create({url: getHomePage()});
+});
+chrome.tabs.onRemoved.addListener(function(tabId,removeInfo) {
+//	var t = chrome.tabs.get(tabId, function(){});
+	if(removeInfo.isWindowClosing){return}
+	chrome.tabs.create({url: getHomePage()});
+});
+chrome.tabs.onUpdated.addListener(function(a, b, c){tabAllowed(a, b, c)});
+chrome.tabs.onCreated.addListener(function(a){tabAllowed(undefined, undefined, a)});
+var allowed = ["chrome", "chrome-devtools", "chrome-extension"];
+var chromenopass = ["newtab", "print", "downloads"];
+function tabAllowed(tabId, changeInfo, tab) {
+	if(tabId === undefined){tabId = tab.id}
+	if(tab.url == "" || tab.url === undefined){return}
+	var pu = parseUri(tab.url);
+        if(!inarray(pu.host, getDomain()) && !urlAllowException(pu, tabId)){
+                chrome.tabs.update(tabId, {url: getHomePage()});
+        }
+}
+function urlAllowException(pu, ti){
+//	var pu = parseUri(u);
+	if(pu.protocol == "chrome" && !inarray(pu.host, chromenopass)){
+		if(pu.anchor == getPassword()){return true}
+//		var pass = prompt("Password");
+//		var hexstring = hex_md5(pass === null ? "" : pass);
+//		chrome.tabs.update(ti, {url: "#" + hexstring});
+//		return hexstring == getPassword();
+		chrome.tabs.update(ti, {url: "pc.html#" + pu.host});
+		return true;
+	}
+	return inarray(pu.protocol, allowed);
+}
+function inarray(s, a){
+        var i;
+        for(i in a){
+                if(a[i] == s){return true}
+        }
+        return false;
+}
+/*function open(){
+	document.getElementById("domain").value = getDomain().join("\n");
+	document.getElementById("homepage").value = getHomePage();
+}
+function save(){
+	SetDomain(document.getElementById("domain").value.split("\n"));
+	SetHomePage(document.getElementById("homepage").value);
+}*/
+</script>
+</head>
+<body>
+</body>
+</html>

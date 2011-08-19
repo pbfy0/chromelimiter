@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Password</title>
+<script src="crypto-sha256.js"></script>
+<script src="get.js"></script>
+<script>
+function pc(){
+	chrome.tabs.getCurrent(function(t){
+		chrome.tabs.update(t.id, {url: "chrome://" + GET["#"] +  "#" + Crypto.SHA256(document.getElementById("checker").value)});
+	});
+	document.body.style.display = "none";
+}
+</script>
+</head>
+<body>
+Password: <input type="password" value="" id="checker" /><input type="submit" id="tb" value="Try" onclick="pc()" />
+</body>
+</html>

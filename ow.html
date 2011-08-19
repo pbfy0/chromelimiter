@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Password</title>
+<script src="crypto-sha256.js"></script>
+<script>
+function checkpass(){
+	location.href = "options.html#" + Crypto.SHA256(document.getElementById("pass").value);
+}
+</script>
+</head>
+<body>
+Password: <input type="password" id="pass" value="" /><input type="submit" value="Try" onclick="checkpass()" />
+</body>
+</html>

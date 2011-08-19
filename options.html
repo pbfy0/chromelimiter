@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Options</title>
+<script src="get.js"></script>
+<script>
+//var pass = GET["#"];
+//if(!checkpass(pass)){location.href = "ow.html"}
+//checkpass(pass);
+function correct(){
+	document.body.style.display = "";
+	open();
+}
+function incorrect(){
+	location.href = "ow.html";
+}
+function checkpass(p){
+chrome.extension.sendRequest({set: false, password: true}, function(res){
+	console.log(res);
+	if(res.password === undefined){
+		chrome.extension.sendRequest({set: true, password: p}, correct);
+	}else{
+		if(p == res.password){
+			correct();
+		}else{
+			incorrect();
+		}
+	}
+});
+}
+function save(){
+	chrome.extension.sendRequest({set: true, domain: document.getElementById("domain").value.split("\n")}, function(response){console.log(response)});
+        chrome.extension.sendRequest({set: true, homepage: document.getElementById("homepage").value}, function(response){console.log(response)});
+}
+/*function savehome(){
+	chrome.extension.sendRequest({set: true, homepage: document.getElementById("homepage").value}, function(response){console.log(response)});
+}*/
+function open(){
+	chrome.extension.sendRequest({set: false, homepage: true}, function(response){document.getElementById("homepage").value = response.homepage});
+        chrome.extension.sendRequest({set: false, domain: true}, function(response){document.getElementById("domain").value = response.domain.join("\n")});
+}
+</script>
+</head>
+<body onload="checkpass(GET['#'])" style="display:none">
+Domain:<br />
+<textarea id="domain" ></textarea><br />
+Homepage: <input type="text" value="" id="homepage" /><br />
+<input type="submit" value="Set" onclick="save()" />
+</body>
