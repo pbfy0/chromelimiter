@@ -17,7 +17,7 @@ function incorrect(){
 function checkpass(p){
 chrome.extension.sendRequest({set: false, password: true}, function(res){
 	console.log(res);
-	if(res.password === undefined){
+	if(res.password === undefined || res.password == ""){
 		chrome.extension.sendRequest({set: true, password: p}, correct);
 	}else{
 		if(p == res.password){

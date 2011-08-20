@@ -4,7 +4,6 @@
 <title></title>
 <script src="parseuri.min.js"></script>
 <script src="get.js"></script>
-<script src="md5-min.js"></script>
 <script>
 /*if(GET["#"] != ""){
 chrome.windows.onRemoved.addListener(function(windowId) {
@@ -60,6 +59,9 @@ function setPassword(p){
 function getPassword(){
 	return localStorage["password"];
 }
+setDomain([]);
+setHomePage("");
+setPassword("");
 chrome.extension.onRequest.addListener(
   function(request, sender, sendResponse) {
 //    console.log(sender.tab ?
