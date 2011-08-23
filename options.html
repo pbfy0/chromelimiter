@@ -31,6 +31,7 @@ chrome.extension.sendRequest({set: false, password: true}, function(res){
 function save(){
 	chrome.extension.sendRequest({set: true, domain: document.getElementById("domain").value.split("\n")}, function(response){console.log(response)});
         chrome.extension.sendRequest({set: true, homepage: document.getElementById("homepage").value}, function(response){console.log(response)});
+	chrome.extension.sendRequest({set: true, optime: parseFloat(document.getElementById("timer"))}, function(response){console.log(response)});
 }
 /*function savehome(){
 	chrome.extension.sendRequest({set: true, homepage: document.getElementById("homepage").value}, function(response){console.log(response)});
@@ -38,6 +39,7 @@ function save(){
 function open(){
 	chrome.extension.sendRequest({set: false, homepage: true}, function(response){document.getElementById("homepage").value = response.homepage});
         chrome.extension.sendRequest({set: false, domain: true}, function(response){document.getElementById("domain").value = response.domain.join("\n")});
+	chrome.extension.sendRequest({set: false, optime: true}, function(response){document.getElementById("timer").value = response.optime});
 }
 </script>
 </head>
@@ -45,5 +47,6 @@ function open(){
 Domain:<br />
 <textarea id="domain" ></textarea><br />
 Homepage: <input type="text" value="" id="homepage" /><br />
+Inactivity: <input type="text" value="" id="timer" /><br />
 <input type="submit" value="Set" onclick="save()" />
 </body>

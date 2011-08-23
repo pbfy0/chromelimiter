@@ -59,9 +59,18 @@ function setPassword(p){
 function getPassword(){
 	return localStorage["password"];
 }
+function setTimer(p){
+	return localStorage["counter"] = p;
+}
+function getTimer(){
+	return Number(localStorage["counter"]);
+}
 setDomain([]);
 setHomePage("");
 setPassword("");
+setTimer(60);
+var now = new Date();
+var then = new Date(now.getTime() + getTimer() * 1000);
 chrome.extension.onRequest.addListener(
   function(request, sender, sendResponse) {
 //    console.log(sender.tab ?
@@ -91,7 +100,57 @@ request.domain);
     }else{
       sendResponse({password: getPassword()});
     }
-  }});
+  }else if(request.time){
+	if(request.set){
+	then = new Date(now.getTime() + getTimer() * 1000);
+		sendResponse({});
+	}else{
+		sendResponse({time: diffString(then, now)});
+	}
+  }else if(request.optime){
+	if(request.set){
+//	then = new Date(now.getTime() + 60000);
+		setTimer(request.optime);
+		sendResponse({});
+	}else{
+		sendResponse({optime: getTimer()});
+	}
+  }
+});
+chrome.windows.onCreated.addListener(function(w){
+	chrome.tabs.create({windowId: w.id, index: 0, url: "timer.html", selected: false});
+});
+setInterval(function(){
+	now = new Date();
+//	chrome.browserAction.setIcon({imageData: duri(diffString(then, now))});
+	if(now > then){
+                then = new Date(now.getTime() + getTimer());
+		goHome()
+//		then = new Date(now.getTime() + 60000);
+	}
+}, 1000);
+var newSession = false;
+function goHome(){
+	chrome.windows.getAll({populate: false}, function(wa){
+		chrome.windows.create({url: getHomePage()}, function(nw){
+			var i;
+			newSession = true;
+			for(i in wa){
+				console.log([wa, nw]);
+				/*if(wa[i].id != nw.id){*/chrome.windows.remove(wa[i].id)/*}*/
+			}
+			setTimeout(function(){newSession = false}, 1000);
+		});
+	});
+}
+function diffString(v, s){
+	var d = Math.floor((v.getTime() - s.getTime()) / 1000);
+	console.log(d);
+	var sec = d % 60;
+	d -= sec;
+	d /= 60;
+	return d + ":" + sec;
+}
 function turl(ta){
 	var o = [];
 	var i;
@@ -101,14 +160,26 @@ function turl(ta){
 	return o;
 }
 
+/*function duri(t){
+	var c = document.createElement("canvas");
+	c.width = c.height = 19;
+	var ctx = c.getContext("2d");
+	ctx.fillStyle = ctx.strokeStyle = "#00000";
+	ctx.font = "8px sans-serif";
+	ctx.fillText(t, 1, 9.5, 18);
+	return ctx.getImageData(0, 0, c.width, c.height);
+}*/
+
 chrome.windows.onRemoved.addListener(function(windowId) {
 //	var w = chrome.windows.get(windowId, function(){});
 //	var urls = turl(w.tabs);
+	if(newSession){return}
 	chrome.windows.create({url: getHomePage()});
 });
 chrome.tabs.onRemoved.addListener(function(tabId,removeInfo) {
 //	var t = chrome.tabs.get(tabId, function(){});
 	if(removeInfo.isWindowClosing){return}
+        if(newSession){return}
 	chrome.tabs.create({url: getHomePage()});
 });
 chrome.tabs.onUpdated.addListener(function(a, b, c){tabAllowed(a, b, c)});
@@ -124,14 +195,10 @@ function tabAllowed(tabId, changeInfo, tab) {
         }
 }
 function urlAllowException(pu, ti){
-//	var pu = parseUri(u);
 	if(pu.protocol == "chrome" && !inarray(pu.host, chromenopass)){
-		if(pu.anchor == getPassword()){return true}
-//		var pass = prompt("Password");
-//		var hexstring = hex_md5(pass === null ? "" : pass);
-//		chrome.tabs.update(ti, {url: "#" + hexstring});
-//		return hexstring == getPassword();
-		chrome.tabs.update(ti, {url: "pc.html#" + pu.host});
+		if(!pu.anchor == getPassword()){
+			chrome.tabs.update(ti, {url: "pc.html#" + pu.host});
+		}
 		return true;
 	}
 	return inarray(pu.protocol, allowed);

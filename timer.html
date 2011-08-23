@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>0:00</title>
+<script>
+setInterval(function(){
+	chrome.extension.sendRequest({time: true, set: false}, function(r){document.title = r.time});
+}, 1000);
+</script>
+</head>
+<body>
+</body>
+</html>

@@ -5,15 +5,18 @@
 	"icons" : {
 		"16" : "icon.png"
 	},
+/*	"browser_action": {
+		"default_title": "Time left"
+	},*/
 //	"default_locale" : "en",
 	"background_page" : "background.html",
 	"options_page" : "ow.html",
-//	"content_scripts": [
-//	    {
-//	      "matches": ["*://*/*"],
-//	      "js": ["content.js"],
-//	      "run_at" : "document_start"
-//	    }
-//	  ],
+	"content_scripts": [
+	    {
+	      "matches": ["*://*/*"],
+	      "js": ["content.js"],
+	      "run_at" : "document_start"
+	    }
+	  ],
 	"permissions" : ["tabs"]
 }
