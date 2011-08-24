@@ -197,7 +197,7 @@ function tabAllowed(tabId, changeInfo, tab) {
 	if(tabId === undefined){tabId = tab.id}
 	if(tab.url == "" || tab.url === undefined){return}
 	var pu = parseUri(tab.url);
-        if(!urlAllowException(pu, tabId) && !inarray(pu.host, getDomain())){
+        if(!urlAllowException(pu, tabId) && !inarraym(pu.host, getDomain())){
                 chrome.tabs.update(tabId, {url: getHomePage()});
         }
 }
@@ -214,6 +214,13 @@ function inarray(s, a){
         var i;
         for(i in a){
                 if(a[i] == s){return true}
+        }
+        return false;
+}
+function inarraym(s, a){
+	var i;
+        for(i in a){
+                if(s.indexOf(a[i]) != -1){return true}
         }
         return false;
 }
