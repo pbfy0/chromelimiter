@@ -128,7 +128,7 @@ setInterval(function(){
 		goHome()
 //		then = new Date(now.getTime() + 60000);
 	}
-}, 1000);
+}, 999);
 var newSession = false;
 function goHome(){
 	chrome.windows.getAll({populate: false}, function(wa){
@@ -203,7 +203,7 @@ function tabAllowed(tabId, changeInfo, tab) {
 }
 function urlAllowException(pu, ti){
 	if(pu.protocol == "chrome" && !inarray(pu.host, chromenopass)){
-		if(!pu.anchor == getPassword()){
+		if(pu.anchor != getPassword()){
 			chrome.tabs.update(ti, {url: "pc.html#" + pu.host});
 		}
 		return true;

@@ -5,7 +5,7 @@
 <script>
 setInterval(function(){
 	chrome.extension.sendRequest({time: true, set: false}, function(r){document.title = r.time});
-}, 1000);
+}, 999);
 </script>
 </head>
 <body>
