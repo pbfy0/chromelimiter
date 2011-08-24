@@ -143,12 +143,19 @@ function goHome(){
 		});
 	});
 }
+function strm(str, f){
+    return (new Array(f + 1)).join(str);
+}
+function pad(n, nop){
+    return strm("0", nop - String(n).length) + n;
+}
 function diffString(v, s){
 	var d = Math.floor((v.getTime() - s.getTime()) / 1000);
 	console.log(d);
 	var sec = d % 60;
 	d -= sec;
 	d /= 60;
+	sec = pad(sec, 2);
 	return d + ":" + sec;
 }
 function turl(ta){

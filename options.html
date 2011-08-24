@@ -31,7 +31,7 @@ chrome.extension.sendRequest({set: false, password: true}, function(res){
 function save(){
 	chrome.extension.sendRequest({set: true, domain: document.getElementById("domain").value.split("\n")}, function(response){console.log(response)});
         chrome.extension.sendRequest({set: true, homepage: document.getElementById("homepage").value}, function(response){console.log(response)});
-	chrome.extension.sendRequest({set: true, optime: parseFloat(document.getElementById("timer"))}, function(response){console.log(response)});
+	chrome.extension.sendRequest({set: true, optime: parseFloat(document.getElementById("timer").value)}, function(response){console.log(response)});
 }
 /*function savehome(){
 	chrome.extension.sendRequest({set: true, homepage: document.getElementById("homepage").value}, function(response){console.log(response)});
