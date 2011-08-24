@@ -41,8 +41,11 @@ chrome.extension.onRequest.addListener(
   }
   });
 }*/
-function getDomain(d){
+function getDomain(){
         return JSON.parse(localStorage["domain"]);
+}
+function getRawDomain(){
+	return localStorage["domain"];
 }
 function setDomain(d){
 	return localStorage["domain"] = JSON.stringify(d);
@@ -65,8 +68,8 @@ function setTimer(p){
 function getTimer(){
 	return Number(localStorage["counter"]);
 }
-if(getDomain() === undefined){setDomain([]);}
-if(getHomePage() === undefined(setHomePage("");}
+if(getRawDomain() === undefined){setDomain([]);}
+if(getHomePage() === undefined){setHomePage("");}
 if(getPassword() === undefined){setPassword("");}
 if(getTimer() === undefined){setTimer(60);}
 var now = new Date();
