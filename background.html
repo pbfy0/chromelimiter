@@ -65,10 +65,10 @@ function setTimer(p){
 function getTimer(){
 	return Number(localStorage["counter"]);
 }
-setDomain([]);
-setHomePage("");
-setPassword("");
-setTimer(60);
+if(getDomain() === undefined){setDomain([]);}
+if(getHomePage() === undefined(setHomePage("");}
+if(getPassword() === undefined){setPassword("");}
+if(getTimer() === undefined){setTimer(60);}
 var now = new Date();
 var then = new Date(now.getTime() + getTimer() * 1000);
 chrome.extension.onRequest.addListener(
@@ -124,7 +124,7 @@ setInterval(function(){
 	now = new Date();
 //	chrome.browserAction.setIcon({imageData: duri(diffString(then, now))});
 	if(now > then){
-                then = new Date(now.getTime() + getTimer());
+                then = new Date(now.getTime() + getTimer() * 1000);
 		goHome()
 //		then = new Date(now.getTime() + 60000);
 	}
